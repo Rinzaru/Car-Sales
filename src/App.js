@@ -1,37 +1,38 @@
-import React from 'react';
-
-import Header from './components/Header';
-import AddedFeatures from './components/AddedFeatures';
-import AdditionalFeatures from './components/AdditionalFeatures';
-import Total from './components/Total';
-
+import React from "react";
+import Header from "./components/Header";
+import { useSelector, useDispatch } from "react-redux";
+import { addFeatureAction, removeFeatureAction } from "./actions/actions";
+import AddedFeatures from "./components/AddedFeatures";
+import AdditionalFeatures from "./components/AdditionalFeatures";
+import Total from "./components/Total";
+import { initialState } from "./reducer/reducer";
 const App = () => {
-  const state = {
-    additionalPrice: 0,
-    car: {
-      price: 26395,
-      name: '2019 Ford Mustang',
-      image:
-        'https://cdn.motor1.com/images/mgl/0AN2V/s1/2019-ford-mustang-bullitt.jpg',
-      features: []
-    },
-    additionalFeatures: [
-      { id: 1, name: 'V-6 engine', price: 1500 },
-      { id: 2, name: 'Racing detail package', price: 1500 },
-      { id: 3, name: 'Premium sound system', price: 500 },
-      { id: 4, name: 'Rear spoiler', price: 250 }
-    ]
+  const car = useSelector((state) => state.car);
+  const additionalFeatures = useSelector((state) => state.additionalFeatures);
+  const additionalprice = useSelector((state) => state.additionalPrice);
+
+  const dispatch = useDispatch();
+
+  const addFeature = (add) => {
+    dispatch(addFeatureAction(add));
+  };
+
+  const removeFeature = (remove) => {
+    dispatch(removeFeatureAction(remove));
   };
 
   return (
     <div className="boxes">
       <div className="box">
-        <Header car={state.car} />
-        <AddedFeatures car={state.car} />
+        <Header car={car} />
+        <AddedFeatures car={car} removeFeature={removeFeature} />
       </div>
       <div className="box">
-        <AdditionalFeatures additionalFeatures={state.additionalFeatures} />
-        <Total car={state.car} additionalPrice={state.additionalPrice} />
+        <AdditionalFeatures
+          additionalFeatures={additionalFeatures}
+          addFeature={addFeature}
+        />
+        <Total car={car} additionalPrice={additionalprice} />
       </div>
     </div>
   );
